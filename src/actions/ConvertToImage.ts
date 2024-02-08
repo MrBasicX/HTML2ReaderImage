@@ -3,6 +3,7 @@ import bodyParser from 'body-parser';
 import { Readability } from '@mozilla/readability';
 import { JSDOM } from 'jsdom';
 import puppeteer from 'puppeteer';
+import chromium from '@sparticuz/chromium'
 
 
 // Function to convert HTML content to screenshot
@@ -15,8 +16,16 @@ export default async function ConvertToImage(
     padding: number,
     fontSize: number,
 ): Promise<Buffer> {
+
     // Initialize Puppeteer
-    const browser = await puppeteer.launch();
+    // const browser = await puppeteer.launch();
+    chromium.setGraphicsMode = false
+
+    const browser = await puppeteer.launch({
+        args: chromium.args,
+        defaultViewport: chromium.defaultViewport,
+        executablePath: await chromium.executablePath(),
+    })
     const page = await browser.newPage();
 
     try {

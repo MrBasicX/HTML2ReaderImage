@@ -15,11 +15,18 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const readability_1 = require("@mozilla/readability");
 const jsdom_1 = require("jsdom");
 const puppeteer_1 = __importDefault(require("puppeteer"));
+const chromium_1 = __importDefault(require("@sparticuz/chromium"));
 // Function to convert HTML content to screenshot
 function ConvertToImage(htmlContent, width, scaleFactor, textColor, backgroundColor, padding, fontSize) {
     return __awaiter(this, void 0, void 0, function* () {
         // Initialize Puppeteer
-        const browser = yield puppeteer_1.default.launch();
+        // const browser = await puppeteer.launch();
+        chromium_1.default.setGraphicsMode = false;
+        const browser = yield puppeteer_1.default.launch({
+            args: chromium_1.default.args,
+            defaultViewport: chromium_1.default.defaultViewport,
+            executablePath: yield chromium_1.default.executablePath(),
+        });
         const page = yield browser.newPage();
         try {
             // Define custom CSS for the page
