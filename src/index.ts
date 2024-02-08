@@ -19,13 +19,20 @@ app.use(cors({
 
 
 // routes
-// test ping route
+// favicon
+app.get('/favicon.ico', (req, res) => res.status(204).end());
+// ping route
 app.get("/ping", (req: Request, res: Response) => {
   res.status(201).json({ message: "Pong!" });
 });
 
+// Root get
+app.get("/", (req: Request, res: Response) => {
+    res.status(200).send("Ready for serving!");
+  });
+
 // Route to handle the creation of a readable image
-app.post('/readable-image', async (req: Request, res: Response, next: NextFunction) => {
+app.post('/', async (req: Request, res: Response, next: NextFunction) => {
   try {
       let { html, width, scale: scaleFactor, color: textColor, background: backgroundColor, padding, fsize: fontSize } = req.body;
 
