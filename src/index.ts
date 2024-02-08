@@ -27,7 +27,7 @@ app.get("/ping", (req: Request, res: Response) => {
 // Route to handle the creation of a readable image
 app.post('/readable-image', async (req: Request, res: Response, next: NextFunction) => {
   try {
-      let { html, width, scaleFactor, textColor, backgroundColor, padding, fontSize } = req.body;
+      let { html, width, scale: scaleFactor, color: textColor, background: backgroundColor, padding, fsize: fontSize } = req.body;
 
       if ((isNaN(html)) && !html) {
           throw Error("HTML missing in request")
