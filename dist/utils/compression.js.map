@@ -1,0 +1,1 @@
+{"version":3,"file":"compression.js","sourceRoot":"","sources":["../../src/utils/compression.ts"],"names":[],"mappings":";;;;;;;;;;;;;;;AAAA,kDAA0B;AAG1B,SAAsB,eAAe,CAAC,OAAe,EAAE,OAAe;;QAClE,gCAAgC;QAChC,MAAM,iBAAiB,GAAG,MAAM,IAAA,eAAK,EAAC,OAAO,CAAC;aACzC,GAAG,CACA;YACI,OAAO,EAAE,OAAO;SACnB,CACJ;aACA,QAAQ,EAAE,CAAC;QAEhB,OAAO,iBAAiB,CAAC;IAC7B,CAAC;CAAA;AAXD,0CAWC"}
