@@ -18,7 +18,7 @@ const errorHandler = (
 
   const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
   res.status(statusCode);
-  res.sendFile('error-chan.png', { root: path.join(__dirname, '../../public') });
+  res.sendFile('error-chan.png', { root: path.join(__dirname, '../public') });
 };
 
 export { notFound, errorHandler };
