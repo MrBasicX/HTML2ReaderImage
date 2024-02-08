@@ -29,7 +29,23 @@ app.get("/ping", (req: Request, res: Response) => {
 
 // Root get
 app.get("/", (req: Request, res: Response) => {
-    res.status(200).send("Ready for serving!");
+    res.status(200).send(
+`
+<pre>
+Ready for serving!
+{
+    html = The HTML body of the page to be rendered.
+    width = Width of the image (viewport of browser used) [900px]
+    scale = Scale of the image (browser used) [2x]
+    color = Font color [${process.env.DEFAULT_COLOR}]
+    background = Background color [${process.env.DEFAULT_BACKGROUND}]
+    padding = Padding for the image [32px]
+    font_size = Font size [18px]
+    quality = Quality of the PNG image generated [${process.env.DEFAULT_IMAGE_QUALITY}]
+}
+</pre>
+`
+    );
 });
 
 // Route to handle the creation of a readable image
