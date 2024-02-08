@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import { notFound, errorHandler } from "./middlewares/ErrorMiddleware";
 import ConvertToImage from "./actions/ConvertToImage";
-import validator from 'validator';
+import {isValidColor} from "./utils/colorMatch";
 
 
 const app: Application = express();
@@ -45,11 +45,12 @@ app.post('/readable-image', async (req: Request, res: Response, next: NextFuncti
       }
 
       // Validate textColor and backgroundColor
-      if (!validator.isHexColor(textColor || 'white')) {
-          textColor = 'white'; // Default value if textColor is invalid
+      if (!isValidColor(textColor)) {
+          textColor = process.env.DEFAULT_COLOR || ''; // load fefault value if textColor is invalid
       }
-      if (!validator.isHexColor(backgroundColor || 'black')) {
-          backgroundColor = 'black'; // Default value if backgroundColor is invalid
+
+      if (!isValidColor(backgroundColor)) {
+          backgroundColor = process.env.DEFAULT_BACKGROUND || ''; // load default value if backgroundColor is invalid
       }
 
       // Sanitize and validate padding
