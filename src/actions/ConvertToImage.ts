@@ -6,7 +6,7 @@ import puppeteer from 'puppeteer';
 
 
 // Function to convert HTML content to screenshot
-export default async function convertToImage(
+export default async function ConvertToImage(
     htmlContent: string,
     width: number,
     scaleFactor: number,

@@ -1,8 +1,8 @@
-import express, { Application, Request, Response } from "express";
+import express, { Application, Request, Response, NextFunction } from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import { notFound, errorHandler } from "./middlewares/ErrorMiddleware";
-import convertToImage from "./actions/ConvertToImage";
+import ConvertToImage from "./actions/ConvertToImage";
 import validator from 'validator';
 
 
@@ -18,44 +18,42 @@ app.use(cors({
 }));
 
 
-// Middleware
-app.use(notFound);
-app.use(errorHandler);
-
 // routes
 // test ping route
 app.get("/ping", (req: Request, res: Response) => {
-  console.log("pinging")
   res.status(201).json({ message: "Pong!" });
 });
 
 // Route to handle the creation of a readable image
-app.post('/readable-image', async (req: Request, res: Response) => {
+app.post('/readable-image', async (req: Request, res: Response, next: NextFunction) => {
   try {
       let { html, width, scaleFactor, textColor, backgroundColor, padding } = req.body;
 
+      if ((isNaN(html)) && !html) {
+          throw Error("HTML missing in request")
+      }
       // Sanitize and validate width
-      width = parseInt(width); // Convert width to integer
+      width = parseInt(width || 900); // Convert width to integer
       if (width < 600 || width > 1800 || isNaN(width)) {
           width = 900; // Default value if width is invalid
       }
 
       // Sanitize and validate scaleFactor
-      scaleFactor = parseFloat(scaleFactor); // Convert scaleFactor to float
+      scaleFactor = parseFloat(scaleFactor || 2); // Convert scaleFactor to float
       if (scaleFactor <= 1 || scaleFactor >= 5 || isNaN(scaleFactor)) {
           scaleFactor = 2; // Default value if scaleFactor is invalid
       }
 
       // Validate textColor and backgroundColor
-      if (!validator.isHexColor(textColor)) {
+      if (!validator.isHexColor(textColor || 'white')) {
           textColor = 'white'; // Default value if textColor is invalid
       }
-      if (!validator.isHexColor(backgroundColor)) {
+      if (!validator.isHexColor(backgroundColor || 'black')) {
           backgroundColor = 'black'; // Default value if backgroundColor is invalid
       }
 
       // Sanitize and validate padding
-      padding = parseInt(padding); // Convert padding to integer
+      padding = parseInt(padding || 32); // Convert padding to integer
       if (padding < 0 || padding >= 64 || isNaN(padding)) {
           padding = 32; // Default value if padding is invalid
       }
@@ -63,7 +61,7 @@ app.post('/readable-image', async (req: Request, res: Response) => {
       // Now you have sanitized and validated variables
 
       // Convert HTML content to screenshot
-      const screenshot: Buffer = await convertToImage(
+      const screenshot: Buffer = await ConvertToImage(
           html,
           width,
           scaleFactor,
@@ -77,11 +75,15 @@ app.post('/readable-image', async (req: Request, res: Response) => {
       res.send(screenshot);
   } catch (error) {
       console.error('Error:', error);
-      res.status(500).send('Internal Server Error');
+      next(error);
   }
 });
+
+// Middleware
+app.use(notFound);
+app.use(errorHandler);
 
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, (): void => console.log(`Server is running on ${PORT}`));
+app.listen(PORT, (): void => console.info(`server is running on ${PORT}`));
