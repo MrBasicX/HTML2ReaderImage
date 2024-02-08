@@ -12,7 +12,8 @@ export default async function ConvertToImage(
     scaleFactor: number,
     textColor: string,
     backgroundColor: string,
-    padding: number
+    padding: number,
+    fontSize: number,
 ): Promise<Buffer> {
     // Initialize Puppeteer
     const browser = await puppeteer.launch();
@@ -27,6 +28,7 @@ export default async function ConvertToImage(
                 color: ${textColor} !important;
                 background-color: ${backgroundColor} !important;
                 padding: ${padding}px !important;
+                font-size: ${fontSize}px !important;
             }
         `;
 
@@ -61,8 +63,7 @@ export default async function ConvertToImage(
 
         return screenshot;
     } catch (error) {
-        console.error('Error converting to screenshot:', error);
-        await browser.close(); // Close the browser in case of error
+        await browser.close();
         throw error;
     }
 }

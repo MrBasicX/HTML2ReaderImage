@@ -27,7 +27,7 @@ app.get("/ping", (req: Request, res: Response) => {
 // Route to handle the creation of a readable image
 app.post('/readable-image', async (req: Request, res: Response, next: NextFunction) => {
   try {
-      let { html, width, scaleFactor, textColor, backgroundColor, padding } = req.body;
+      let { html, width, scaleFactor, textColor, backgroundColor, padding, fontSize } = req.body;
 
       if ((isNaN(html)) && !html) {
           throw Error("HTML missing in request")
@@ -58,6 +58,13 @@ app.post('/readable-image', async (req: Request, res: Response, next: NextFuncti
           padding = 32; // Default value if padding is invalid
       }
 
+        // Sanitize and validate fontSize
+        fontSize = parseInt(fontSize || 12); // Convert fontSize to integer
+        if (fontSize < 8 || fontSize >= 64 || isNaN(fontSize)) {
+            fontSize = 12; // Default value if fontSize is invalid
+        }
+
+        
       // Now you have sanitized and validated variables
 
       // Convert HTML content to screenshot
@@ -67,14 +74,14 @@ app.post('/readable-image', async (req: Request, res: Response, next: NextFuncti
           scaleFactor,
           textColor,
           backgroundColor,
-          padding
+          padding,
+          fontSize
       );
 
       // Send the screenshot as the response
       res.set('Content-Type', 'image/png');
       res.send(screenshot);
   } catch (error) {
-      console.error('Error:', error);
       next(error);
   }
 });
